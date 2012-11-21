@@ -1,0 +1,17 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>LiveEdit demo</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="../jquery.LiveEdit.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('div').LiveEdit({success: function(r){alert(r);}});
+      });
+    </script>
+  </head>
+  <body>
+    <div data-role="LiveEdit" data-type="text">Value</div>
+  </body>
+</html>
