@@ -9,7 +9,8 @@
       $(document).ready(function() {
         $('#text-demo').LiveEdit({success: function(){alert('post\'d form data to server');}});
         $('#bool-demo').LiveEdit({success: function(){alert('post\'d form data to server');}});
-        $('#json-demo').LiveEdit({postFormat: 'json', success: function(){alert('post\'d JSON data to server');}});
+        $('#contentEditable-demo').LiveEdit({postFormat: 'json', success: function(){alert('post\'d JSON data to server');}});
+        $('#json-demo').LiveEdit({postFormat: 'json', jsonParseBool: true, success: function(){alert('post\'d JSON data to server');}});
       });
     </script>
   </head>
@@ -23,6 +24,9 @@
       <h2>Link with boolean data</h2>
       <a id="bool-demo" href="#" data-role="LiveEdit" data-type="bool">Bool</a>
     </section>
+    <section>
+      <h2>Div with contentEditable data</h2>
+      <div id="contentEditable-demo" data-role="LiveEdit" data-type="contentEditable">contentEditable</div>
     <section>
       <h2>Submitting JSON data</h2>
       <div id="json-demo" data-role="LiveEdit" data-type="text">JSON data</div>
