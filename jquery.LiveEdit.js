@@ -44,18 +44,18 @@ $.fn.LiveEdit = function ( options ) {
   /*
    * Assemble the values contained in o as a JSON string
    */
-  var toJSON = function (o) {
-    var tmp = [];
-    for (var k in o) { // k is the index or key
-      if (typeof o[k] != 'undefined') {
-        var v = o[k]; // v is the value
-        var p = ''; // p is the string to push onto tmp
-        if (v.match(/^[0-9]+$/) !== null) p = o[k];
-        else p = '"'+v+'"';
-        tmp.push('"'+k+'":'+p);
+  var toJSON = function (obj) {
+    var nvPairs = []; // name/value pairs
+    for (var name in obj) {
+      if (typeof obj[name] != 'undefined') {
+        var value = obj[name];
+        var toPush = '';
+        if (value.match(/^[0-9]+$/) !== null) toPush = value;
+        else toPush = '"'+value+'"';
+        nvPairs.push('"'+name+'":'+toPush);
       }
     }
-    return '{'+tmp.join(',')+'}';
+    return '{'+nvPairs.join(',')+'}';
   };
 
   /*
@@ -69,7 +69,9 @@ $.fn.LiveEdit = function ( options ) {
       data = $(this).data();
     var successFn = options.success || function () {};
     var errorFn = options.error || function () {};
-    $.post(options.url, data);
+    $.post(options.url, data)
+      .success(successFn)
+      .error(errorFn);
   };
 
   /*
