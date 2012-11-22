@@ -77,7 +77,7 @@ $.fn.LiveEdit = function ( options ) {
     unlock($(this));
     var data;
     if (options.postFormat == 'json')
-      data = toJSON($(this).data());
+      data = {json:toJSON($(this).data())};
     else
       data = $(this).data();
     var successFn = options.success || function () {};
