@@ -62,6 +62,7 @@ $.fn.LiveEdit = function ( options ) {
    * Event handler
    */
   var eventFn = function () {
+    $(this).removeData('_processing');
     var data;
     if (options.postFormat == 'json')
       data = toJSON($(this).data());
@@ -87,26 +88,44 @@ $.fn.LiveEdit = function ( options ) {
     switch (type) {
       case 'text':
         clickFn = function (ev) {
+          // prevent multiple clicks from spamming the server
+          if ($(this).data('_processing') === true) return;
+          else $(this).data('_processing', true);
           var e = $(this);
-          e.hide();
-          var w = $(e.wrap('<div data-role="LiveEditWrapper"></div>').parent()[0]);
-          w.append('<input type="text" value="'+e.html()+'" />');
-          var i = $(w.find('input')[0]);
-          i.data(e.data());
-          i.on('LiveEdit', eventFn);
+          var i, focusoutFn;
+          if (this.tagName == 'DIV') {
+            i = $(this);
+            i.prop('contentEditable', true);
+            focusoutFn = function () {
+              i.prop('contentEditable', false);
+              $(this).triggerHandler('LiveEdit');
+            };
+          }
+          else {
+            e.hide();
+            var w = $(e.wrap('<div data-role="LiveEditWrapper"></div>').parent()[0]);
+            w.append('<input type="text" value="'+e.html()+'" />');
+            i = $(w.find('input')[0]);
+            i.data(e.data());
+            focusoutFn = function () {
+              e.html(i.val());
+              i.data('value', i.val());
+              i.hide();
+              e.show();
+              $(this).triggerHandler('LiveEdit');
+            };
+          }
+          i.off('LiveEdit', eventFn).on('LiveEdit', eventFn);
           i.focus();
-          i.focusout(function () {
-            e.html(i.val());
-            i.data('value', i.val());
-            i.hide();
-            e.show();
-            $(this).triggerHandler('LiveEdit');
-          });
+          i.off('focusout').focusout(focusoutFn);
         };
         break;
 
       case 'bool':
         clickFn = function (ev) {
+          // prevent multiple clicks from spamming the server
+          if ($(this).data('_processing') === true) return;
+          else $(this).data('_processing', true);
           if ($(this).data('value') == 'true') $(this).data('value', false);
           else $(this).data('value', true);
           $(this).trigger('LiveEdit');
