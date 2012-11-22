@@ -37,20 +37,40 @@ $.fn.LiveEdit = function ( options ) {
    */
   var options = $.extend({
     'defaultType':  'text',
-    'url': window.location.href
+    'url': window.location.href,
+    'postFormat': 'form'
   }, options);
 
   /*
-   * Event binding
+   * Assemble the values contained in o as a JSON string
    */
-  $(document).on('LiveEdit', 'body > *', function (e) {
-    var data = $(this).data();
+  var toJSON = function (o) {
+    var tmp = [];
+    for (var k in o) { // k is the index or key
+      if (typeof o[k] != 'undefined') {
+        var v = o[k]; // v is the value
+        var p = ''; // p is the string to push onto tmp
+        if (v.match(/^[0-9]+$/) !== null) p = o[k];
+        else p = '"'+v+'"';
+        tmp.push('"'+k+'":'+p);
+      }
+    }
+    return '{'+tmp.join(',')+'}';
+  };
+
+  /*
+   * Event handler
+   */
+  var eventFn = function () {
+    var data;
+    if (options.postFormat == 'json')
+      data = toJSON($(this).data());
+    else
+      data = $(this).data();
     var successFn = options.success || function () {};
     var errorFn = options.error || function () {};
-    $.post(options.url, data)
-      .success(successFn)
-      .error(errorFn);
-  });
+    $.post(options.url, data);
+  };
 
   /*
    * Setup matched elements
@@ -61,36 +81,37 @@ $.fn.LiveEdit = function ( options ) {
 
     var type = o.attr('data-type') || options.defaultType;
 
-    var valFn;
-    if (o.is(':input')) {
-      valFn = o.val;
-    }
-    else {
-      valFn = o.html;
-    }
-
-    var mkEditableFn;
+    var clickFn;
     switch (type) {
       case 'text':
-        mkEditableFn = function () {
+        clickFn = function (ev) {
           var e = $(this);
           e.hide();
-          e.parent().append('<input type="text" value="'+e.html()+'" />');
-          var i = $(e.parent().find('input')[0]);
+          var w = $(e.wrap('<div data-role="LiveEditWrapper"></div>').parent()[0]);
+          w.append('<input type="text" value="'+e.html()+'" />');
+          var i = $(w.find('input')[0]);
           i.data(e.data());
+          i.on('LiveEdit', eventFn);
           i.focus();
           i.focusout(function () {
             e.html(i.val());
             i.data('value', i.val());
             i.hide();
             e.show();
-            $(this).trigger('LiveEdit');
+            $(this).triggerHandler('LiveEdit');
           });
         };
         break;
+
+      case 'bool':
+        clickFn = function (ev) {
+          if ($(this).data('value') == 'true') $(this).data('value', false);
+          else $(this).data('value', true);
+          $(this).trigger('LiveEdit');
+        };
+        break;
     }
-    o.attr('data-value', valFn());
-    o.click(mkEditableFn);
+    o.click(clickFn);
   });
 };
 
