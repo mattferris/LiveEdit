@@ -149,8 +149,8 @@ $.fn.LiveEdit = function ( options ) {
           // prevent multiple clicks from spamming the server
           if (isLocked($(this))) return;
           else lock($(this));
-          if ($(this).data('value') == 'true') $(this).data('value', false);
-          else $(this).data('value', true);
+          if ($(this).data('value') == 'true') $(this).data('value', 'false');
+          else $(this).data('value', 'true');
           $(this).triggerHandler('LiveEdit');
         };
         break;
