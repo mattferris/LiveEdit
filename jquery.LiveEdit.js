@@ -144,13 +144,14 @@ $.fn.LiveEdit = function ( options ) {
         break;
 
       case 'bool':
+        o.on('LiveEdit', eventFn);
         clickFn = function (ev) {
           // prevent multiple clicks from spamming the server
           if (isLocked($(this))) return;
           else lock($(this));
           if ($(this).data('value') == 'true') $(this).data('value', false);
           else $(this).data('value', true);
-          $(this).trigger('LiveEdit');
+          $(this).triggerHandler('LiveEdit');
         };
         break;
     }
