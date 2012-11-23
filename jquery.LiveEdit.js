@@ -139,7 +139,7 @@ $.fn.LiveEdit = function ( options ) {
           };
           i.off('LiveEdit', eventFn).on('LiveEdit', eventFn);
           i.focus();
-          i.off('focusout').focusout(focusoutFn);
+          i.off('focusout', focusoutFn).focusout(focusoutFn);
         };
         break;
 
@@ -155,7 +155,7 @@ $.fn.LiveEdit = function ( options ) {
         };
         break;
     }
-    o.click(clickFn);
+    o.off('click', clickFn).click(clickFn);
   });
 };
 
