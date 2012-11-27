@@ -11,6 +11,7 @@
         $('#bool-demo').LiveEdit({success: function(){alert('post\'d form data to server');}});
         $('#contentEditable-demo').LiveEdit({postFormat: 'json', success: function(){alert('post\'d JSON data to server');}});
         $('#json-demo').LiveEdit({postFormat: 'json', jsonParseBool: true, success: function(){alert('post\'d JSON data to server');}});
+        $('#customType-demo').LiveEdit({customTypes:{foo: function(o,e){return function(){alert('custom type click');};}}});
       });
     </script>
   </head>
@@ -30,6 +31,10 @@
     <section>
       <h2>Submitting JSON data</h2>
       <div id="json-demo" data-role="LiveEdit" data-type="text">JSON data</div>
+    </section>
+    <section>
+      <h2>Custom type</h1>
+      <div id="customType-demo" data-type="foo">Custom type</div>
     </section>
   </body>
 </html>

@@ -40,7 +40,8 @@ $.fn.LiveEdit = function ( options ) {
     'url': window.location.href,
     'postFormat': 'form',
     'jsonParseBool': false,
-    'jsonParseNumeric': false
+    'jsonParseNumeric': false,
+    'customTypes': {},
   }, options);
 
   /*
@@ -153,6 +154,12 @@ $.fn.LiveEdit = function ( options ) {
           else $(this).data('value', true);
           $(this).triggerHandler('LiveEdit');
         };
+        break;
+
+      default:
+        if (typeof options.customTypes[type] === 'function') {
+          clickFn = options.customTypes[type](this, eventFn);
+        }
         break;
     }
     o.off('click', clickFn).click(clickFn);
