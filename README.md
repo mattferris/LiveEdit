@@ -73,6 +73,46 @@ In the example above, when clicked the value will change to `false` and then be 
 
 Available for `div` elements. When clicked, the `div` is set to `contentEditable="true"`. When focus is lost, the contents of the `div` is sent to the server.
 
+### Custom types
+
+Custom types can be defined through the `customTypes` key. The name of the key is the name of the type and the value must be a function. The function must return a function to be used as the click event on the element.
+
+    $('#foo').LiveEdit({
+      customTypes: {
+        bar: function () {
+          return function (e) {
+            // custom handling goes here
+          };
+        };
+      }
+    }); 
+
+`bar` can now be used as a value for `data-type`.
+
+    <div id="foo" data-type="bar">...</div>
+
+#### A note on event locking
+
+LiveEdit suppresses multiple events from firing at the same time by using event locking. Essentially, event locking ensures only one event can fire at a time. Custom types should incorporate event locking. Building on the custom type example above, event locking could be incorporated like so.
+
+    $('#foo').LiveEdit({
+      customTypes: {
+        bar: function () {
+          return function (e) {
+
+            // if object is locked, ignore the event, otherwise lock it
+            if ($().LiveEdit('isLocked', $(this)) return;
+            else $().LiveEdit('lock', $(this);
+
+            // custom handling goes here
+
+          };
+        };
+      }
+    }); 
+
+Elements are automatically unlocked once the event has been processed.
+
 Attaching Additional Data
 -------------------------
 
