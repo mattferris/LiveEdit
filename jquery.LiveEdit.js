@@ -102,15 +102,15 @@ $.fn.LiveEdit = function ( method ) {
 
           case 'text':
             clickFn = function (ev) {
-              // prevent multiple clicks from spamming the server
-              if (methods.isLocked($(this))) return;
-              else methods.lock($(this));
               var e = $(this);
               var i, focusoutFn;
               e.hide();
               var w = $(e.wrap('<div data-role="LiveEditWrapper"></div>').parent()[0]);
               w.append('<input type="text" value="'+e.html()+'" />');
               i = $(w.find('input')[0]);
+              // prevent multiple clicks from spamming the server
+              if (methods.isLocked(i)) return;
+              else methods.lock(i);
               i.data(e.data());
               focusoutFn = function () {
                 e.html(i.val());
