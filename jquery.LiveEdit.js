@@ -102,15 +102,22 @@ $.fn.LiveEdit = function ( method ) {
           case 'text':
             clickFn = function (ev) {
               var e = $(this);
-              var i, focusoutFn;
+              var i, focusoutFn, w;
               e.hide();
-              var w = $(e.wrap('<div data-role="LiveEditWrapper"></div>').parent()[0]);
-              w.append('<input type="text" value="'+e.html()+'" />');
-              i = $(w.find('input')[0]);
-              // prevent multiple clicks from spamming the server
-              if (methods.isLocked(i)) return;
-              else methods.lock(i);
-              i.data(e.data());
+              var p = e.parent()[0];
+              if (p.nodeName.toLowerCase() === 'div' && $(p).attr('data-role') === 'LiveEditWrapper') {
+                w = $(p);
+                i = $(w.find('input')[0]);
+                i.show();
+                // prevent multiple clicks from spamming the server
+                if (methods.isLocked(i)) return;
+                else methods.lock(i);
+              } else {
+                w = $(e.wrap('<div data-role="LiveEditWrapper"></div>').parent()[0]);
+                w.append('<input type="text" value="'+e.html()+'" />');
+                i = $(w.find('input')[0]);
+                i.data(e.data());
+              }
               focusoutFn = function () {
                 e.html(i.val());
                 i.data('value', i.val());
@@ -118,9 +125,9 @@ $.fn.LiveEdit = function ( method ) {
                 e.show();
                 $(this).triggerHandler('LiveEdit');
               };
-              i.off('LiveEdit', eventFn).on('LiveEdit', eventFn);
+              i.off('LiveEdit').on('LiveEdit', eventFn);
               i.focus();
-              i.off('focusout', focusoutFn).focusout(focusoutFn);
+              i.off('focusout.LiveEdit').on('focusout.LiveEdit', focusoutFn);
             };
             break;
 
@@ -138,7 +145,7 @@ $.fn.LiveEdit = function ( method ) {
 
           default:
             if (typeof options.customTypes[type] === 'function') {
-              clickFn = options.customTypes[type](this, eventFn);
+              clickFn = options.customTypes[type](o, eventFn);
             }
             break;
         }
