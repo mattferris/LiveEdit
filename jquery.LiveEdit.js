@@ -33,7 +33,6 @@
 
 $.fn.LiveEdit = function ( method ) {
   var options = {};
-
   var methods = {
 
     /*
@@ -43,7 +42,7 @@ $.fn.LiveEdit = function ( method ) {
       /*
        * Options
        */
-      var options = $.extend({
+      options = $.extend({
         'defaultType':  'text',
         'url': window.location.href,
         'postFormat': 'form',
@@ -176,8 +175,12 @@ $.fn.LiveEdit = function ( method ) {
 
   }
 
-  method = 'init' || method;
-  if (typeof methods[method] === 'function') return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+  if (typeof methods[method] === 'function')
+    return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+  else if (typeof method === 'object' || !method)
+    return methods.init.apply(this, arguments);
+  else
+    $.error('Method "'+method+'" does not exist on jQuery.LiveEdit');
 };
 
 })(jQuery);
