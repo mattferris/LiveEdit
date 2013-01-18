@@ -143,6 +143,13 @@ $.fn.LiveEdit = function ( method ) {
             };
             break;
 
+          case 'send':
+            o.on('LiveEdit', eventFn);
+            clickFn = function (ev) {
+              $(this).triggerHandler('LiveEdit');
+            };
+            break;
+
           default:
             if (typeof options.customTypes[type] === 'function') {
               clickFn = options.customTypes[type](o, eventFn);
