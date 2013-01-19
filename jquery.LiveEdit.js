@@ -56,16 +56,29 @@ $.fn.LiveEdit = function ( method ) {
        */
       var eventFn = function () {
         methods.unlock($(this));
+
         var data = $(this).data();
         var url = data.url || options.url;
         var postFormat = data.postFormat || options.postFormat;
+        var jsonOptions = {
+          parseBool: options.jsonParseBool,
+          parseNumeric: options.jsonParseNumeric
+        }
+
+        if (typeof data.jsonParseBool != 'undefined' && data.jsonParseBool) jsonOptions.parseBool = true;
+        if (typeof data.jsonParseBool != 'undefined' && !data.jsonParseBool) jsonOptions.parseBool = false;
+        if (typeof data.jsonParseNumeric != 'undefined' && data.jsonParseNumeric) jsonOptions.parseNumeric = true;
+        if (typeof data.jsonParseNumeric != 'undefined' && !data.jsonParseNumeric) jsonOptions.parseNumeric = false;
+
         if (postFormat == 'json')
-          data = {json:methods.toJSON(data)};
+          data = {json:methods.toJSON(data, jsonOptions)};
+
         var successFn = options.success || function () {};
         var errorFn = options.error || function () {};
+
         $.post(url, data)
           .success(successFn)
-        .error(errorFn);
+          .error(errorFn);
       };
 
       /*
@@ -163,17 +176,17 @@ $.fn.LiveEdit = function ( method ) {
     /*
      * Assemble the values contained in o as a JSON string
      */
-    toJSON: function ( obj ) {
+    toJSON: function ( obj, options ) {
       var nvPairs = []; // name/value pairs
       for (var name in obj) {
         if (typeof obj[name] != 'undefined') {
           var value = obj[name];
-          var toPush = '';
-          if (options.jsonInterpretBool && value === true) toPush = 'true';
-          else if (options.jsonParseBool && value === false) toPush = 'false';
-          else if (options.jsonParseBool && (value === 'true' || value === 'false')) toPush = value;
-          else if (options.jsonParseNumeric && value.match(/^[-0-9,.\s]+$/) !== null) toPush = parseInt(value);
-          else toPush = '"'+value+'"';
+          var toPush = value;
+          if (typeof value == 'string') {
+            if (options.parseBool && (value === 'true' || value === 'false')) toPush = value;
+            else if (options.parseNumeric && typeof value == 'string' && value.match(/^[-0-9,.\s]+$/) !== null) toPush = parseInt(value);
+            else toPush = '"'+value+'"';
+          }
           nvPairs.push('"'+name+'":'+toPush);
         }
       }

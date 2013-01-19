@@ -65,3 +65,22 @@ asyncTest('override postFormat', 1, function () {
   $('#a').attr('data-post-format', 'json');
   $('#a').trigger('click');
 });
+
+asyncTest('override jsonParseBool/jsonParseNumeric', 2, function () {
+  $('#a').LiveEdit({
+    url: 'echo.php',
+    postFormat: 'json',
+    success: function (response) {
+      response = $.parseJSON(response);
+      equal(typeof response.bool, 'boolean', 'jsonParseBool');
+      equal(typeof response.number, 'number', 'jsonParseNumeric');
+      start();
+    }
+  });
+  $('#a').attr('data-json-parse-bool', 'true')
+         .attr('data-json-parse-numeric', 'true')
+         .attr('data-bool', 'true')
+         .attr('data-number', '1');
+  $('#a').trigger('click');
+});
+
