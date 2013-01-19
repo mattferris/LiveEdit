@@ -3,31 +3,57 @@
 <html>
   <head>
     <title>LiveEdit demo</title>
+    <style type="text/css">
+      body {
+        font-family: helvetica, arial, verdana, sans-serif;
+        color: #444;
+        margin: 0;
+      }
+      h1, h2 {
+        margin: 0;
+      }
+      h1 {
+        padding: 20px;
+        background: #ddd;
+      }
+      section {
+        border-bottom: solid #ddd 1px;
+        padding: 20px;
+      }
+    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="../jquery.LiveEdit.js"></script>
     <script>
       $(document).ready(function() {
-        $('#text-demo').LiveEdit({success: function(){alert('post\'d form data to server');}});
-        $('#bool-demo').LiveEdit({success: function(){alert('post\'d form data to server');}});
-        $('#contentEditable-demo').LiveEdit({postFormat: 'json', success: function(){alert('post\'d JSON data to server');}});
-        $('#json-demo').LiveEdit({postFormat: 'json', jsonParseBool: true, success: function(){alert('post\'d JSON data to server');}});
+        var alertFn = function () { alert('sent data to server'); };
+        $('#text-demo').LiveEdit({success: alertFn});
+        $('#bool-demo').LiveEdit({success: alertFn});
+        $('#contentEditable-demo').LiveEdit({postFormat: 'json', success: alertFn});
+        $('#send-demo').LiveEdit({success: alertFn});
+        $('#json-demo').LiveEdit({postFormat: 'json', jsonParseBool: true, success: alertFn});
         $('#customType-demo').LiveEdit({customTypes:{foo: function(o,e){return function(){alert('custom type click');};}}});
+        $('#override-demo').LiveEdit({success: alertFn});
       });
     </script>
   </head>
   <body>
     <h1>LiveEdit demo</h1>
     <section>
-      <h2>Div with text data</h2>
+      <h2>Div using the <i>text</i> data type</h2>
       <div id="text-demo" data-role="LiveEdit" data-type="text">Text</div>
     </section>
     <section>
-      <h2>Link with boolean data</h2>
+      <h2>Link using the <i>bool</i> data type</h2>
       <a id="bool-demo" href="#" data-role="LiveEdit" data-type="bool" data-value="true">Bool</a>
     </section>
     <section>
-      <h2>Div with contentEditable data</h2>
+      <h2>Div using the <i>contentEditable</i> data type</h2>
       <div id="contentEditable-demo" data-role="LiveEdit" data-type="contentEditable">contentEditable</div>
+    </section>
+    <section>
+      <h2>Link using the <i>send</i> data type</h2>
+      <a id="send-demo" href="#" data-type="send" data-text="haha">Send</a>
+    </section>
     <section>
       <h2>Submitting JSON data</h2>
       <div id="json-demo" data-role="LiveEdit" data-type="text">JSON data</div>
@@ -35,6 +61,10 @@
     <section>
       <h2>Custom type</h1>
       <div id="customType-demo" data-type="foo">Custom type</div>
+    </section>
+    <section>
+      <h2>Overriding options with data attributes</h2>
+      <div id="override-demo" data-type="text" data-post-format="json" data-url="index.html" data-json-parse-bool="true" data-json-parse-numeric="true">Text</div>
     </section>
   </body>
 </html>
