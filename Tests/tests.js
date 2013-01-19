@@ -6,37 +6,37 @@
 var fx = $('#qunit-fixture');
 
 
-module('"send" data-type tests', {
+module('"send" tests', {
   setup: function(){ fx.append('<div id="a" data-type="send"></div>'); },
   teardown: function(){ $('#a').off('LiveEdit'); fx.empty(); }
 });
 
-asyncTest('"send" data-type error callback test', 1, function () {
+asyncTest('error callback test', 1, function () {
   $('#a').LiveEdit({
     url: 'badurl.html',
-    error: function(){ ok(true, 'Called error callback'); start(); }
+    error: function(){ ok(true, 'error callback'); start(); }
   });
   $('#a').trigger('click');
 });
 
-asyncTest('"send" data-type success callback test', 1, function () {
+asyncTest('success callback test', 1, function () {
   $('#a').LiveEdit({
-    success: function(){ ok(true, 'Called success callback'); start(); }
+    success: function(){ ok(true, 'success callback'); start(); }
   });
   $('#a').trigger('click');
 });
 
 
-//module('"text" data-type tests');
+//module('"text" tests');
 
 
-//module('"contentEditable" data-type tests');
+//module('"contentEditable" tests');
 
 
-//module('"bool" data-type tests');
+//module('"bool" tests');
 
 
-//module('custom data-type tests');
+//module('custom tests');
 
 
 module('options override', {
