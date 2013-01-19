@@ -52,3 +52,16 @@ asyncTest('override url', 1, function () {
   $('#a').attr('data-url', 'badurl.html');
   $('#a').trigger('click');
 });
+
+asyncTest('override postFormat', 1, function () {
+  $('#a').LiveEdit({
+    url: 'echo.php',
+    success: function (response) {
+      response = $.parseJSON(response);
+      equal(response.postFormat, 'json', 'success using override postFormat');
+      start();
+    }
+  });
+  $('#a').attr('data-post-format', 'json');
+  $('#a').trigger('click');
+});

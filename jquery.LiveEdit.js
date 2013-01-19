@@ -56,14 +56,14 @@ $.fn.LiveEdit = function ( method ) {
        */
       var eventFn = function () {
         methods.unlock($(this));
-        var data;
-        if (options.postFormat == 'json')
-          data = {json:methods.toJSON($(this).data())};
-        else
-          data = $(this).data();
+        var data = $(this).data();
+        var url = data.url || options.url;
+        var postFormat = data.postFormat || options.postFormat;
+        if (postFormat == 'json')
+          data = {json:methods.toJSON(data)};
         var successFn = options.success || function () {};
         var errorFn = options.error || function () {};
-        $.post(options.url, data)
+        $.post(url, data)
           .success(successFn)
         .error(errorFn);
       };
