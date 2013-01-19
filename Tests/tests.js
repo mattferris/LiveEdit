@@ -37,3 +37,18 @@ asyncTest('"send" data-type success callback test', 1, function () {
 
 
 //module('custom data-type tests');
+
+
+module('options override', {
+  setup: function(){ fx.append('<div id="a" data-type="send"></div>'); },
+  teardown: function(){ $('#a').off('LiveEdit'); fx.empty(); }
+});
+
+asyncTest('override url', 1, function () {
+  $('#a').LiveEdit({
+    success: function(){ ok(false, 'failed to override url'); start(); },
+    error: function(){ ok(true, 'success using override url'); start(); }
+  });
+  $('#a').attr('data-url', 'badurl.html');
+  $('#a').trigger('click');
+});
