@@ -159,6 +159,9 @@ $.fn.LiveEdit = function ( method ) {
           case 'send':
             o.on('LiveEdit', eventFn);
             clickFn = function (ev) {
+              // prevent multiple clicks from spamming the server
+              if (methods.isLocked($(this))) return;
+              else methods.lock($(this));
               $(this).triggerHandler('LiveEdit');
             };
             break;
