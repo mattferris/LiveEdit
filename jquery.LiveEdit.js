@@ -1,7 +1,7 @@
 /**
  * jquery.LiveEdit.js
  *
- * Copyright (c) 2012, Matt Ferris
+ * Copyright (c) 2013, Matt Ferris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
