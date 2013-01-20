@@ -167,6 +167,7 @@ $.fn.LiveEdit = function ( method ) {
             break;
 
           default:
+            o.on('LiveEdit', eventFn);
             if (typeof options.customTypes[type] === 'function') {
               clickFn = options.customTypes[type](o, eventFn);
             }
