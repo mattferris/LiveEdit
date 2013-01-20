@@ -77,6 +77,16 @@ In the example above, when clicked the value will change to `false` and then be 
 
 Available for `div` elements. When clicked, the `div` is set to `contentEditable="true"`. When focus is lost, the contents of the `div` is sent to the server.
 
+### send
+
+Used to simply send the data contained within the element to the server when clicked.
+
+    <a href="#" data-type="send" data-post-format="json" data-foo="bar">Send it</a>
+
+The above example would send the following json request to the server.
+
+    {"type": "send", "postFormat": "json", "foo": "bar"}
+
 ### Custom types
 
 Custom types can be defined through the `customTypes` key. The name of the key is the name of the type and the value must be a function. This function is passed two arguments: `obj` which is the jQuery wrapped object matched by the selector pattern (`#foo` in this case); `eventFn` which is the event handler that should be bound to the `LiveEdit` event on `obj` (and is bound by default). The function must return a second function to be used as the click event on `obj`.
